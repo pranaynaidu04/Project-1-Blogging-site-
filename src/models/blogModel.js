@@ -32,7 +32,16 @@ const blogSchema = new mongoose.Schema({
     isPublished:{
         type:Boolean,
         default:false
+    },
+    publishedAt :{
+        type :Date,
+        default : null
+    },
+    deletedAt :{
+        type : Date,
+        default : null
     }
+
 },{timestamps:true})
 
 module.exports = mongoose.model('Blog',blogSchema)

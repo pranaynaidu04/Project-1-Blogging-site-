@@ -116,6 +116,7 @@ Refer below sample
 ## Collections
 ### Blogs
 ```yaml
+
 {
   "title": "How to win friends",
   "body": "Blog body",

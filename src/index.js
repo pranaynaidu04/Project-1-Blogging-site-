@@ -1,18 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { default : mongoose } = require("mongoose")
+const { default: mongoose } = require("mongoose")
 const app = express();
 const route = require("./routes/route")
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect("mongodb+srv://Project1_User1:project1@cluster0.yhdaxew.mongodb.net/test",
-        {useNewUrlParser : true})
-        .then( () => console.log("project1 Mongodb is connected"))
-        .catch(err => console.log(err));
+    { useNewUrlParser: true })
+    .then(() => console.log("project1 Mongodb is connected"))
+    .catch(err => console.log(err));
 
-// app.use('/',route);
+app.use('/', route);
 
 
-app.listen(process.env.PORT||3000,function(){
-    console.log("App running on port : " +(process.env.PORT||3000))
+app.listen(process.env.PORT || 3000, function () {
+    console.log("App running on port : " + (process.env.PORT || 3000))
 });

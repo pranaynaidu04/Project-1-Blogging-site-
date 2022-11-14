@@ -14,6 +14,6 @@ router.post('/authors', authorController.createAuthor)
 router.post('/blogs',blogController.createBlog)
 
 //fetch blogs
-// router.get('/blogs',blogController.getBlogs)
+router.get('/blogs',blogController.getBlogs)
 
 module.exports = router

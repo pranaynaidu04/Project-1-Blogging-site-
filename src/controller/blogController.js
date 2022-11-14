@@ -14,7 +14,9 @@ const createBlog = async function (req, res) {
     }
     //AuthorId attributes present or not
     if (!authorId) {
-      return res.status(400).send({ status: false, data: "AuthorId is required" });
+      return res
+        .status(400)
+        .send({ status: false, data: "AuthorId is required" });
     }
     //validationForObjectId
     if (!isValidId(authorId)) {
@@ -41,9 +43,14 @@ const getBlogs = async function (req, res) {
   try {
     let queries = req.query;
     const blogsData = await blogModel.find(queries);
-    for(let i=0; i<blogsData.length;i++){
-      const element = blogsData[i]
-      if(element.isDeleted == false && element.isPublished== true){
+    if (blogsData.length == 0) {
+      return res
+        .status(404)
+        .send({ status: false, data: "No blogs are found " });
+    }
+    for (let i = 0; i < blogsData.length; i++) {
+      const element = blogsData[i];
+      if (element.isDeleted == false && element.isPublished == true) {
         return res.status(200).send({ status: true, data: blogsData });
       }
     }

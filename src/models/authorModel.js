@@ -1,4 +1,5 @@
-const mongoose = required('mongoose')
+const mongoose = require('mongoose')
+require('mongoose-type-email')
 
 const authorSchema= new mongoose.Schema({
     fname:{

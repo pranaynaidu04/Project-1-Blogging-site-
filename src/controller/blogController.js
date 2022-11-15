@@ -30,7 +30,7 @@ const createBlog = async function (req, res) {
 
     if (isPublished == true) {
       let testDate = Date.now();
-      data["publishedAt"] = moment(testDate).format("MM/DD/YYYY");
+      data["publishedAt"] = moment(testDate);
       const Blog = await blogModel.create(data);
       return res.status(201).send({ status: true, data: Blog });
     }
@@ -72,28 +72,23 @@ const updateBlogs = async function (req, res) {
         .status(400)
         .send({ status: false, data: "Data not found in body" });
     }
-    
     if (!isValidId(blogId)) {
       return res.status(400).send({ status: false, data: "Invalid blogId" });
     }
-    let testDate = Date.now()
+    let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(
-
-      { _id: blogId, isDeleted:false},
+      { _id: blogId, isDeleted: false },
       {
         title: title,
         body: body,
         $set: {
           isPublished: true,
-          publishedAt: moment(testDate).format("MM/DD/YYYY"),
+          publishedAt: moment(testDate),
         },
         $push: { tags: tags, subcategory: subcategory },
       },
       { new: true }
     );
-
-    
-
     return res.status(200).send({ status: true, data: updatedBlog });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
@@ -112,12 +107,11 @@ const deleteBlog = async function (req, res) {
       {
         $set: {
           isDeleted: true,
-          deletedAt: moment(testDate).format("MM/DD/YYYY"),
+          deletedAt: moment(testDate),
         },
       },
       { new: true }
     );
-
     if (!updatedBlog) {
       return res
         .status(404)
@@ -132,13 +126,10 @@ const deleteBlog = async function (req, res) {
 const deleteBlogByQuery = async function (req, res) {
   try {
     let queries = req.query;
-
     if (Object.keys(queries) == 0) {
       return res.status(400).send({ status: false, msg: "query is required" });
     }
-
     let data = await blogModel.find(queries);
-
     if (data.length == 0) {
       return res.status(404).send({ status: false, msg: "document not found" });
     }

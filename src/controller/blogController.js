@@ -129,17 +129,22 @@ const deleteBlogByQuery = async function (req, res) {
     if (Object.keys(queries) == 0) {
       return res.status(400).send({ status: false, msg: "query is required" });
     }
-    let data = await blogModel.find(queries);
-    if (data.length == 0) {
-      return res.status(404).send({ status: false, msg: "document not found" });
-    }
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      element.isDeleted = true;
-    }
-    return res.status(200).send({ status: true, data: {} });
+    const deleteData = await blogModel.updateMany(
+      { $and: [queries, { isDeleted: false }] },
+      { $set: { isDeleted: true } },
+      { new: true }
+    );
+    if (deleteData.length == 0)
+      return res
+        .status(404)
+        .send({ status: false, msg: "No blog are found for Update" });
+
+    res.status(200).send({
+      status: true,
+      data: {},
+    });
   } catch (error) {
-    return res.status(500).send({ status: false, message: error.message });
+    res.status(500).send({ status: false, msg: error.message });
   }
 };
 

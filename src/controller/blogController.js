@@ -126,12 +126,13 @@ const deleteBlog = async function (req, res) {
 const deleteBlogByQuery = async function (req, res) {
   try {
     let queries = req.query;
-    if (Object.keys(queries) == 0) {
+    if (Object.keys(queries).length == 0) {
       return res.status(400).send({ status: false, msg: "query is required" });
     }
+    let testDate = Date.now()
     const deleteData = await blogModel.updateMany(
       { $and: [queries, { isDeleted: false }] },
-      { $set: { isDeleted: true } },
+      { $set: { isDeleted: true ,deletedAt : moment(testDate)} },
       { new: true }
     );
     if (deleteData.length == 0)

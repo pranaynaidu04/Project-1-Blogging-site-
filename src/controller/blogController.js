@@ -99,7 +99,6 @@ const updateBlogs = async function (req, res) {
 const deleteBlog = async function (req, res) {
   try {
     let data = req.params.blogId;
-    
     if (!isValidId(data)){
       return res.status(404).send({status: false, data:"Invalid blogId"})
     }
@@ -116,7 +115,7 @@ const deleteBlog = async function (req, res) {
     );
 
     if (!updatedBlog) {
-      return res.status(404).send({ status: false, msg: "" });
+      return res.status(404).send({ status: false, msg: "blog document doesn't exist" });
     }
     return res.status(200).send({ status: true, data: {} });
   } catch (error) {
@@ -124,7 +123,28 @@ const deleteBlog = async function (req, res) {
   }
 };
 
+const deleteBlogByQuery = async function(req, res){
+  try {
+    let queries = req.query
+    
+    if(Object.keys(queries)==0){ return res.status(400).send({status: false, msg:"query is required"}) }
+
+    let data = await blogModel.find(queries)
+
+    if(data.length==0){ return res.status(404).send({status: false, msg: "document not found"});  }
+    for(let i=0; i<data.length;i++){
+      const element = data[i]
+      element.isDeleted = true
+    }
+    return res.status(200).send({status: true, data: {}})
+
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message })
+  }
+}
+
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
 module.exports.deleteBlog = deleteBlog
+module.exports.deleteBlogByQuery = deleteBlogByQuery

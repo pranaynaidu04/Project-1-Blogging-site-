@@ -96,6 +96,35 @@ const updateBlogs = async function (req, res) {
   }
 };
 
+const deleteBlog = async function (req, res) {
+  try {
+    let data = req.params.blogId;
+    
+    if (!isValidId(data)){
+      return res.status(404).send({status: false, data:"Invalid blogId"})
+    }
+    let testDate = Date.now();
+    let updatedBlog = await blogModel.findOneAndUpdate(
+      { _id: data },
+      {
+        $set: {
+          isDeleted: true,
+          deletedAt: moment(testDate).format("MM/DD/YYYY"),
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedBlog) {
+      return res.status(404).send({ status: false, msg: "" });
+    }
+    return res.status(200).send({ status: true, data: {} });
+  } catch (error) {
+    return res.status(500).send({ status: false, error: error.message });
+  }
+};
+
 module.exports.createBlog = createBlog;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
+module.exports.deleteBlog = deleteBlog

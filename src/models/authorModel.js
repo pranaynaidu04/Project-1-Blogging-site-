@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-require('mongoose-type-email')
+const Email = require('mongoose-type-email')
 
 const authorSchema= new mongoose.Schema({
     fname:{
@@ -16,9 +16,9 @@ const authorSchema= new mongoose.Schema({
         enum:["Mr", "Mrs", "Miss"]
     },
     email: {
-        type: mongoose.SchemaTypes.Email, 
+        type: String, 
         required: true,
-        unique:true  
+        unique:true 
     },
     password:{
         type: String,

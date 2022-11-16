@@ -8,7 +8,6 @@ const createBlog = async function (req, res) {
   try {
     let data = req.body;
     let authorId = data.authorId;
-    let isPublished = data.isPublished;
     if (Object.keys(data).length == 0) {
       return res.status(404).send({ status: false, data: "data Not Found" });
     }
@@ -27,13 +26,12 @@ const createBlog = async function (req, res) {
     if (!findauthor) {
       return res.status(404).send({ status: false, data: "Author not Found" });
     }
-
+    let isPublished = data.isPublished;
     if (isPublished == true) {
       let testDate = Date.now();
       data["publishedAt"] = moment(testDate);
-      const Blog = await blogModel.create(data);
+    } const Blog = await blogModel.create(data);
       return res.status(201).send({ status: true, data: Blog });
-    }
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
   }

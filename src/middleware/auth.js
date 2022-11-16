@@ -5,11 +5,11 @@ const authenticate = function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];
     if (!token) {
-      return res.status(401).send({ msg: "token must be present" });
+      return res.status(401).send({status:false, msg: "token must be present" });
     }
     let decodedToken = jwt.verify(token, "Mini-Blogging-Project");
     if (!decodedToken) {
-      return res.status(401).send({ msg: "token is invalid" });
+      return res.status(401).send({status:false, msg: "token is invalid" });
     }
     req.authorLoggedIn = decodedToken.authorId;
     next();
@@ -25,7 +25,7 @@ const authorise = async function (req, res, next) {
       let authorId2 = req.query.authorId;
       console.log(authorId2);
       if (authorId2 != req.authorLoggedIn) {
-        return res.status(403).send({ msg: "you dont have access" });
+        return res.status(403).send({status:false, msg: "you dont have access" });
       }
       next();
     } else {
@@ -33,7 +33,7 @@ const authorise = async function (req, res, next) {
       let authorId1 = blogs.authorId;
       console.log(authorId1);
       if (authorId1 != req.authorLoggedIn) {
-        return res.status(403).send({ msg: "you dont have access" });
+        return res.status(403).send({status:false, msg: "you dont have access" });
       }
       next();
     }

@@ -9,22 +9,22 @@ const createBlog = async function (req, res) {
     let data = req.body;
     let authorId = data.authorId;
     if (Object.keys(data).length == 0) {
-      return res.status(404).send({ status: false, data: "data Not Found" });
+      return res.status(404).send({ status: false, msg: "data Not Found" });
     }
     //AuthorId attributes present or not
     if (!authorId) {
       return res
         .status(400)
-        .send({ status: false, data: "AuthorId is required" });
+        .send({ status: false, msg: "AuthorId is required" });
     }
     //validationForObjectId
     if (!isValidId(authorId)) {
-      return res.status(400).send({ status: false, data: "Invalid AuthorId" });
+      return res.status(400).send({ status: false, msg: "Invalid AuthorId" });
     }
     let findauthor = await authorModel.findById(authorId);
     //Author data Exist or Not
     if (!findauthor) {
-      return res.status(404).send({ status: false, data: "Author not Found" });
+      return res.status(404).send({ status: false, msg: "Author not Found" });
     }
     let isPublished = data.isPublished;
     if (isPublished == true) {
@@ -44,7 +44,7 @@ const getBlogs = async function (req, res) {
     if (blogsData.length == 0) {
       return res
         .status(404)
-        .send({ status: false, data: "No blogs are found " });
+        .send({ status: false, msg: "No blogs are found " });
     }
     for (let i = 0; i < blogsData.length; i++) {
       const element = blogsData[i];
@@ -68,14 +68,14 @@ const updateBlogs = async function (req, res) {
     if (Object.keys(blogdata).length == 0) {
       return res
         .status(400)
-        .send({ status: false, data: "Data not found in body" });
+        .send({ status: false, msg: "Data not found in body" });
     }
     if (!isValidId(blogId)) {
-      return res.status(400).send({ status: false, data: "Invalid blogId" });
+      return res.status(400).send({ status: false, msg: "Invalid blogId" });
     }
     let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(
-      { _id: blogId, isDeleted: false },
+      { _id: blogId},
       {
         title: title,
         body: body,
@@ -87,6 +87,9 @@ const updateBlogs = async function (req, res) {
       },
       { new: true }
     );
+    if(updatedBlog.isDeleted == true){
+      return res.status(404).send({status: false, msg: "blog not found"})
+    }
     return res.status(200).send({ status: true, data: updatedBlog });
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
@@ -97,7 +100,7 @@ const deleteBlog = async function (req, res) {
   try {
     let data = req.params.blogId;
     if (!isValidId(data)) {
-      return res.status(404).send({ status: false, data: "Invalid blogId" });
+      return res.status(404).send({ status: false, msg: "Invalid blogId" });
     }
     let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(

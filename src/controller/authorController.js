@@ -42,7 +42,7 @@ const loginUser = async function (req, res) {
     if (!author) {
       return res
         .status(400)
-        .send({ status: false, data: "email or password incorrect" });
+        .send({ status: false, msg: "email or password incorrect" });
     }
 
     let token = jwt.sign(

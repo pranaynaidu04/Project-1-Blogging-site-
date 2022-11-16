@@ -20,19 +20,25 @@ const authenticate = function (req, res, next) {
 
 const authorise = async function (req, res, next) {
   try {
-    let blogId = req.params.blogId
-    
-    let blogs = await blogModel.findById(blogId)
-    let authorId = blogs.authorId
-    if(!authorId){ 
-      authorId=req.query.authorId
+    let blogId = req.params.blogId;
+    if (!blogId) {
+      let authorId2 = req.query.authorId;
+      console.log(authorId2);
+      if (authorId2 != req.authorLoggedIn) {
+        return res.status(403).send({ msg: "you dont have access" });
+      }
+      next();
+    } else {
+      let blogs = await blogModel.findById(blogId);
+      let authorId1 = blogs.authorId;
+      console.log(authorId1);
+      if (authorId1 != req.authorLoggedIn) {
+        return res.status(403).send({ msg: "you dont have access" });
+      }
+      next();
     }
-    if (authorId != req.authorLoggedIn) {
-      return res.status(403).send({ msg: "you dont have access" });
-    }
-    next();
   } catch (error) {
-    return res.status(500).send({status:false, msg: error.message})
+    return res.status(500).send({ status: false, msg: error.message });
   }
 };
 

@@ -21,7 +21,7 @@ const authenticate = function (req, res, next) {
         }
       }
     );
-    req.authorLoggedIn = req.decoded.authorId;
+    // req.login = req.decoded.authorId;
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });
   }
@@ -31,18 +31,18 @@ const authorise = async function (req, res, next) {
   try {
     let authorId1 = req.query.authorId;
     let authorLogin = req.decoded.authorId;
-    let blogId = req.params.blogId
-    if(blogId){
+    let blogId = req.params.blogId;
+    if (blogId) {
       let blogs = await blogModel.findById(blogId);
       let authorId1 = blogs.authorId;
       console.log(authorId1);
-      if (authorId1 != req.authorLoggedIn) {
+      if (authorId1 != authorLogin) {
         return res
           .status(403)
-          .send({ status: false, msg: "you dont have access" });
+          .send({ status: false, msg: "you dont have access1" });
       }
       next();
-    }else{
+    } else {
       if (authorId1 != authorLogin) {
         return res
           .status(403)
@@ -50,7 +50,6 @@ const authorise = async function (req, res, next) {
       }
       next();
     }
-    
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });
   }

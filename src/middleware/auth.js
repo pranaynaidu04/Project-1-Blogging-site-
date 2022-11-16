@@ -7,12 +7,13 @@ const authenticate = function (req, res, next) {
     if (!token) {
       return res.status(401).send({status:false, msg: "token must be present" });
     }
-    let decodedToken = jwt.verify(token, "Mini-Blogging-Project");
-    if (!decodedToken) {
-      return res.status(401).send({status:false, msg: "token is invalid" });
-    }
-    req.authorLoggedIn = decodedToken.authorId;
-    next();
+    let decodedToken = jwt.verify(token, "Mini-Blogging-Project",(err,decoded)=>{if(err){
+      return res.status(401).send({status:false,msg:err.message})
+    }else{
+    req.decoded = decoded
+    next(); 
+    }});
+    req.authorLoggedIn = req.decoded.authorId;
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });
   }

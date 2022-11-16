@@ -13,5 +13,7 @@ const isEmail = function (emailId) {
   }
 };
 
+// enum,string,trim,token,
+
 module.exports.isValidId = isValidId;
 module.exports.isEmail = isEmail

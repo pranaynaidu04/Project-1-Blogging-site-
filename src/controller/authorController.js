@@ -9,11 +9,17 @@ const createAuthor = async function (req, res) {
     if (Object.keys(data).length == 0) {
       return res.status(404).send({ status: false, data: "Data not Found" });
     }
-    let email = data.emailId;
+    let email = data.email;
     if (!validator.isEmail(email)) {
       return res
         .status(400)
-        .send({ status: false, data: "Enter a valid EmailId" });
+        .send({ status: false, msg: "Enter a valid EmailId" });
+    }
+    const findEmail = await authorModel.findOne({ email: email });
+    if (findEmail) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Enter Unique email Id" });
     }
     const created = await authorModel.create(data);
     res.status(201).send({ status: true, data: created });

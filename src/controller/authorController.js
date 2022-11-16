@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose')
 const authorModel = require('../models/authorModel')
 const validator = require('../Validator/validator')
+const jwt = require('jsonwebtoken')
 
 const createAuthor = async function (req, res) {
     try {
@@ -19,5 +20,12 @@ const createAuthor = async function (req, res) {
         res.status(500).send({status:false, error: error.message})
     }
 }  
+
+const loginUser = async function(req,res){
+    let userName = req.body.emailId;
+    let password = req.body.password;
+    
+    let user = await authorModel.findOne({})
+  }
 
 module.exports.createAuthor = createAuthor

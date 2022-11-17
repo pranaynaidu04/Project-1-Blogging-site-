@@ -47,6 +47,12 @@ const createAuthor = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "Enter a valid EmailId" });
 
+    const findEmail = await authorModel.findOne({ email: email });
+    if (findEmail)
+      return res
+        .status(400)
+        .send({ status: false, msg: "Enter Unique email Id" });
+
     if (!password)
       return res
         .status(400)
@@ -56,12 +62,6 @@ const createAuthor = async function (req, res) {
         status: false,
         msg: "Password Must contain uppercase , lowercase , special character and number",
       });
-
-    const findEmail = await authorModel.findOne({ email: email });
-    if (findEmail)
-      return res
-        .status(400)
-        .send({ status: false, msg: "Enter Unique email Id" });
 
     const created = await authorModel.create(data);
     return res.status(201).send({ status: true, data: created });

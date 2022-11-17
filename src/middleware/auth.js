@@ -21,38 +21,11 @@ const authenticate = function (req, res, next) {
         }
       }
     );
+    authorLoggedIn = req.decoded.authorId
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });
   }
 };
 
-const authorise = async function (req, res, next) {
-  try {
-    let authorId1 = req.query.authorId;
-    let authorLogin = req.decoded.authorId;
-    let blogId = req.params.blogId;
-    if (blogId) {
-      let blogs = await blogModel.findById(blogId);
-      let authorId1 = blogs.authorId;
-      console.log(authorId1);
-      if (authorId1 != authorLogin) {
-        return res
-          .status(403)
-          .send({ status: false, msg: "you dont have access1" });
-      }
-      next();
-    } else {
-      if (authorId1 != authorLogin) {
-        return res
-          .status(403)
-          .send({ status: false, msg: "you don't have access" });
-      }
-      next();
-    }
-  } catch (error) {
-    return res.status(500).send({ status: false, msg: error.message });
-  }
-};
 
 module.exports.authenticate = authenticate;
-module.exports.authorise = authorise;

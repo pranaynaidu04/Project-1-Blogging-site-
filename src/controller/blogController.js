@@ -60,19 +60,23 @@ const getBlogs = async function (req, res) {
 
 const updateBlogs = async function (req, res) {
   try {
-    let blogId = req.params.blogId;
     let blogdata = req.body;
     let { title, body, tags, subcategory } = req.body;
-    console.log(blogId);
-    console.log(blogdata);
     if (Object.keys(blogdata).length == 0) {
       return res
         .status(400)
         .send({ status: false, msg: "Data not found in body" });
     }
+    let blogId = req.params.blogId;
     if (!isValidId(blogId)) {
       return res.status(400).send({ status: false, msg: "Invalid blogId" });
     }
+    let blogs = await blogModel.findById(blogId);
+    if (!blogs) return res.status(404).send({ status: false, msg: "Blogs not found" })
+
+    let authorId = blogs.authorId
+    if (authorId != req.decoded.authorId) return res.status(403).send({ status: false, msg: "you dont have access" })
+
     let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(
       { _id: blogId },
@@ -98,13 +102,19 @@ const updateBlogs = async function (req, res) {
 
 const deleteBlog = async function (req, res) {
   try {
-    let data = req.params.blogId;
-    if (!isValidId(data)) {
+    let blogId = req.params.blogId;
+    if (!isValidId(blogId)) {
       return res.status(404).send({ status: false, msg: "Invalid blogId" });
     }
+    let blogs = await blogModel.findById(blogId);
+    if (!blogs) return res.status(404).send({ status: false, msg: "Blogs not found" })
+
+    let authorId = blogs.authorId
+    if (authorId != req.decoded.authorId) return res.status(403).send({ status: false, msg: "you dont have access" })
+
     let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(
-      { _id: data },
+      { _id: blogId },
       {
         $set: {
           isDeleted: true,
@@ -113,12 +123,10 @@ const deleteBlog = async function (req, res) {
       },
       { new: true }
     );
-    if (!updatedBlog) {
-      return res
-        .status(404)
-        .send({ status: false, msg: "blog document doesn't exist" });
-    }
+    if (!updatedBlog) { return res.status(404).send({ status: false, msg: "blog document doesn't exist" }); }
+
     return res.status(200).send({ status: true, data: {} });
+
   } catch (error) {
     return res.status(500).send({ status: false, error: error.message });
   }
@@ -130,21 +138,22 @@ const deleteBlogByQuery = async function (req, res) {
     if (Object.keys(queries).length == 0) {
       return res.status(400).send({ status: false, msg: "query is required" });
     }
+
+    let authorId = queries.authorId;
+    if (!isValidId(authorId)) return res.status(404).send({ status: false, msg: "Invalid authorId" })
+
+    if (authorId !== req.decoded.authorId) return res.status(403).send({ status: false, msg: "you don't have access" });
+
     let testDate = Date.now();
     const deleteData = await blogModel.updateMany(
       { $and: [queries, { isDeleted: false }] },
       { $set: { isDeleted: true, deletedAt: moment(testDate) } },
       { new: true }
     );
-    if (deleteData.length == 0)
-      return res
-        .status(404)
-        .send({ status: false, msg: "No blog are found for Update" });
+    if (deleteData.length == 0) return res.status(404).send({ status: false, msg: "No blog are found for Update" });
 
-    res.status(200).send({
-      status: true,
-      data: {},
-    });
+    return res.status(200).send({ status: true, data: {} });
+
   } catch (error) {
     res.status(500).send({ status: false, msg: error.message });
   }

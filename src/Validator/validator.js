@@ -30,6 +30,5 @@ const isValidPassword = function (pwd) {
     return false;
   }
 };
-//token
 
 module.exports = { isValidId, isEmail, isValidString, isValidPassword };

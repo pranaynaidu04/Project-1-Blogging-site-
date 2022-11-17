@@ -18,28 +18,13 @@ router.post("/blogs", auth.authenticate, blogController.createBlog);
 router.get("/blogs", auth.authenticate, blogController.getBlogs);
 
 //update blogs
-router.put(
-  "/blogs/:blogId",
-  auth.authenticate,
-  auth.authorise,
-  blogController.updateBlogs
-);
+router.put("/blogs/:blogId", auth.authenticate, blogController.updateBlogs);
 
 //delete blogs
-router.delete(
-  "/blogs/:blogId",
-  auth.authenticate,
-  auth.authorise,
-  blogController.deleteBlog
-);
+router.delete("/blogs/:blogId",auth.authenticate, blogController.deleteBlog);
 
 // delete blogs using query
-router.delete(
-  "/blogs",
-  auth.authenticate,
-  auth.authorise,
-  blogController.deleteBlogByQuery
-);
+router.delete("/blogs",auth.authenticate, blogController.deleteBlogByQuery);
 
 //user login
 router.post("/login", authorController.loginUser);

@@ -16,9 +16,6 @@ mongoose
 
 app.use("/", route);
 
-app.use(function(req,res){
-    return res.status(404).send({status:false , message :"Path not Found.."})
-})
 
 app.listen(process.env.PORT || 3000, function () {
   console.log("App running on port : " + (process.env.PORT || 3000));

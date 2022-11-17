@@ -92,11 +92,6 @@ const loginUser = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, msg: "password is required" });
-    if (!isValidPassword(password))
-      return res.status(400).send({
-        status: false,
-        msg: "Enter a valid Password",
-      });
 
     let author = await authorModel.findOne({
       email: email,

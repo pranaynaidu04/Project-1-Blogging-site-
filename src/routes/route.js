@@ -29,8 +29,8 @@ router.delete("/blogs", auth.authenticate, blogController.deleteBlogByQuery);
 //user login
 router.post("/login", authorController.loginUser);
 
-// router.all("/*", async function (req, res) {
-//   return res.status(404).send({ status: false, message: "Page Not Found" });
-// });
+router.all("/*", async function (req, res) {
+  return res.status(404).send({ status: false, message: "Page Not Found" });
+});
 
 module.exports = router;

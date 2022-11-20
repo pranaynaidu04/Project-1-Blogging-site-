@@ -148,6 +148,7 @@ const deleteBlog = async function (req, res) {
     let testDate = Date.now();
     let updatedBlog = await blogModel.findOneAndUpdate(
       { _id: blogId, isDeleted: false },
+      
       {
         $set: {
           isDeleted: true,

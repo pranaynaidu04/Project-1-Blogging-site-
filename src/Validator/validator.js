@@ -1,8 +1,11 @@
 const { default: mongoose } = require("mongoose");
 
+/*****************************ObjectId Validation**************************************/
 const isValidId = function (id) {
   return mongoose.Types.ObjectId.isValid(id);
 };
+
+/*****************************Email Validation**************************************/
 
 const isEmail = function (emailId) {
   let emailRegex =
@@ -14,12 +17,15 @@ const isEmail = function (emailId) {
   }
 };
 
+/*****************************String Validation**************************************/
+
 const isValidString = function (value) {
   if (typeof value === "undefined" || value === null) return false;
   if (typeof value === "string" && value.trim().length === 0) return false;
   return true;
 };
 
+/*****************************Password Validation**************************************/
 const isValidPassword = function (pwd) {
   let passwordRegex =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;

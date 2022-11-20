@@ -7,6 +7,8 @@ const {
 } = require("../Validator/validator");
 const jwt = require("jsonwebtoken");
 
+/*****************************Create Author**************************************/
+
 const createAuthor = async function (req, res) {
   try {
     let data = req.body;
@@ -70,6 +72,8 @@ const createAuthor = async function (req, res) {
     res.status(500).send({ status: false, error: error.message });
   }
 };
+
+/*****************************Author Login**************************************/
 
 const loginUser = async function (req, res) {
   try {

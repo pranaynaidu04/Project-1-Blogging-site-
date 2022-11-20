@@ -8,27 +8,28 @@ router.get("/test", function (req, res) {
   res.send({ data: "test api" });
 });
 
-//Author creation
+/*****************************Create Author**************************************/
 router.post("/authors", authorController.createAuthor);
 
-//blog creation
-router.post("/blogs", auth.authenticate, blogController.createBlog);
-
-//fetch blogs
-router.get("/blogs", auth.authenticate, blogController.getBlogs);
-
-//update blogs
-router.put("/blogs/:blogId", auth.authenticate, blogController.updateBlogs);
-
-//delete blogs
-router.delete("/blogs/:blogId", auth.authenticate, blogController.deleteBlog);
-
-// delete blogs using query
-router.delete("/blogs", auth.authenticate, blogController.deleteBlogByQuery);
-
-//user login
+/*****************************Author Login**************************************/
 router.post("/login", authorController.loginUser);
 
+/*****************************Create Blog**************************************/
+router.post("/blogs", auth.authenticate, blogController.createBlog);
+
+/*****************************Get Blog**************************************/
+router.get("/blogs", auth.authenticate, blogController.getBlogs);
+
+/*****************************Update Blog using path params**************************************/
+router.put("/blogs/:blogId", auth.authenticate, blogController.updateBlogs);
+
+/*****************************Delete Blog using path params**************************************/
+router.delete("/blogs/:blogId", auth.authenticate, blogController.deleteBlog);
+
+/*****************************Delete Blog using Query params**************************************/
+router.delete("/blogs", auth.authenticate, blogController.deleteBlogByQuery);
+
+/***************************** Path not match**************************************/
 router.all("/*", async function (req, res) {
   return res.status(404).send({ status: false, message: "Page Not Found" });
 });
